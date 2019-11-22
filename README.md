@@ -7,4 +7,3 @@ The app’s landing page will include a heatmap representing the map of the worl
 ![]('img/app_sketch.png)
 
 *Note 1: The image of the map in the app sketch does not reflect that it is a heatmap, and the color scale shown in the sketch, and will be updated when implementing the app.*
-
