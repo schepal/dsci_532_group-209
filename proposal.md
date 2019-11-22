@@ -4,7 +4,7 @@
 
 According to a [study](https://www.alliedmarketresearch.com/beer-market) conducted by Allied Market Research, the global beer market on its own is projected to reach a valuation of nearly $700 billion by 2025. Despite the massive global market for alcoholic beverages, the industry is extremely competitive with large corporations dominating the majority of consumer market share. Amid this aggressive competition, the companies who best understand their customers and modify their marketing strategies accordingly will reap a majority of the rewards.
 
-We believe harnessing the power of global alcohol consumption statistics integrated into a visual app can provide tangible value for companies operating in this industry. Marketing managers and corporate executives can use our app to assess which geographic regions are the fastest growing and most relevant for product expansion. Our app will save users time with raw data analysis by providing a visually aesthetic global heat map of key alcohol consumption statistics within the beer, wine and spirits categories.
+We believe harnessing the power of global alcohol consumption statistics integrated into a visual app can provide tangible value for companies operating in this industry. Marketing managers and corporate executives can use our app to assess which geographic regions are the most relevant for product expansion. Our app will save users time with raw data analysis by providing a visually aesthetic global heat map of key alcohol consumption statistics within the beer, wine and spirits categories.
 
 
 ## Section 2: Description of the data
