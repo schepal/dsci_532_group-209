@@ -64,7 +64,7 @@ def create_map(alcohol_type = 'beer'):
     ).project(
         type='mercator'
     ).properties(
-        width=1100,
+        width=900,
         height=600,
     )
 
