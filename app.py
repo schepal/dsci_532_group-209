@@ -66,12 +66,47 @@ def create_map(alcohol_type = 'beer'):
     ).properties(
         width=1200,
         height=600,
-    ).configure_legend(
-        gradientLength=400,
-        gradientThickness=30,
+    )
+
+    bar = alt.Chart(df).mark_bar().encode(
+        alt.X(
+            field=cols[1],
+            type='quantitative',
+            title=f'Proportion of total servings per person from {alcohol_type}',
+            scale=alt.Scale(domain=[0, 1]),
+        ),
+        alt.Y(
+            field='country',
+            type='nominal',
+            sort=alt.EncodingSortField(field=cols[1], op='max', order='descending'),
+            title=''
+        ),
+        alt.Fill(
+            field = cols[1],
+            type = 'quantitative',
+            scale=alt.Scale(domain=[0, 1], range=map_color),
+            legend=None),
+        tooltip = [
+            {"field": cols[3], "type": "nominal", 'title': "Country"},
+            {"field": cols[1], "type": "quantitative", 'title': f'Proportion of total servings per person from {alcohol_type}', 'format':'.2f'},
+            {"field": cols[0], "type": "quantitative", 'title': f'Total {alcohol_type} servings'},
+            {"field": cols[2], "type": "quantitative", 'title': 'Global rank'},
+        ]
+    ).transform_window(
+        sort=[alt.SortField(cols[1], order="descending")], 
+        rank="rank(cols[1])"
+    ).transform_filter(
+        alt.datum.rank <= 20
+    ).properties(
+        title=f"Top 20 countries that love {alcohol_type}",
+        width = 200
+    )
+
+    return alt.hconcat(map_plot, bar).configure_legend(
+        gradientLength=300,
+        gradientThickness=20,
         titleLimit= 0
-    ) 
-    return map_plot
+    )
 header = dbc.Jumbotron(
     [
         dbc.Container(
