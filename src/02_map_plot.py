@@ -22,10 +22,10 @@ def create_map(alcohol_type):
     import altair as alt
     import pandas_profiling
     from vega_datasets import data
-
-    # Need to enable this to allow work with larger datasets (https://altair-viz.github.io/user_guide/faq.html)
-    alt.data_transformers.enable('json')
     
+    # load dataset
+    df = pd.read_csv("../data/merged_data_clean.csv")
+
     # set colour scheme of map
     if alcohol_type == 'wine':
         map_color = ['#f9f9f9', '#720b18']
