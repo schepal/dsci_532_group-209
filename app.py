@@ -64,7 +64,7 @@ def create_map(alcohol_type = 'beer'):
     ).project(
         type='mercator'
     ).properties(
-        width=1200,
+        width=1100,
         height=600,
     )
 
@@ -72,7 +72,7 @@ def create_map(alcohol_type = 'beer'):
         alt.X(
             field=cols[1],
             type='quantitative',
-            title=f'Proportion of total servings per person from {alcohol_type}',
+            title = "",
             scale=alt.Scale(domain=[0, 1]),
         ),
         alt.Y(
@@ -99,13 +99,21 @@ def create_map(alcohol_type = 'beer'):
         alt.datum.rank <= 20
     ).properties(
         title=f"Top 20 countries that love {alcohol_type}",
-        width = 200
+        width = 200,
+        height = 600
     )
 
     return alt.hconcat(map_plot, bar).configure_legend(
         gradientLength=300,
         gradientThickness=20,
-        titleLimit= 0
+        titleLimit= 0,
+        labelFontSize=15,
+        titleFontSize=20
+    ).configure_axis(
+        labelFontSize=15,
+        titleFontSize=20
+    ).configure_title(
+        fontSize=20
     )
 header = dbc.Jumbotron(
     [
