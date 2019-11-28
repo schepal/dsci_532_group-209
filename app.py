@@ -101,6 +101,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
             {"field": cols[0], "type": "quantitative", 'title': f'Total {alcohol_type} servings'},
             {"field": cols[2], "type": "quantitative", 'title': 'Global rank'},
         ]
+    ).transform_filter(alt.datum.region == region if region != 'World' else alt.datum.total_servings >= 0
     ).transform_window(
         sort=[alt.SortField(cols[1], order="descending")],
         rank="rank(col_to_filter)"
