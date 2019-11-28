@@ -12,7 +12,7 @@ import dash_bootstrap_components as dbc
 app = dash.Dash(__name__, assets_folder='assets')
 server = app.server
 df = pd.read_csv("data/merged_data_clean.csv")
-def create_map(alcohol_type = 'beer'):
+def create_map(alcohol_type = 'beer', region = "World"):
     """
     Create choropleth heatmap based on alcoholic consumption
     
@@ -29,6 +29,9 @@ def create_map(alcohol_type = 'beer'):
     --------
     >>> create_map('spirit')
     """
+
+    region_dict = {"World":[140, 450, 400], "Asia":[400, -190, 520], "Europe":[800,300, 1100],
+     "Africa":[400,300, 310], "Americas":[275,950, 310], "Oceania":[500, -800, 50]}
         
     # set colour scheme of map
     if alcohol_type == 'wine':
@@ -62,7 +65,7 @@ def create_map(alcohol_type = 'beer'):
         lookup='id',
         from_=alt.LookupData(df, 'id', fields = cols)
     ).project(
-        type='mercator'
+        type='mercator', scale = region_dict[region][0], translate = [region_dict[region][1], region_dict[region][2]]
     ).properties(
         width=900,
         height=600,
@@ -148,6 +151,21 @@ content = dbc.Container([
                                 verticalAlign="middle")
                                 )),
                     dbc.Col(
+                    dcc.Dropdown(
+                        id='dd-chart2',
+                        options=[
+                            {'label': 'World', 'value': 'World'},
+                            {'label': 'Asia', 'value': 'Asia'},
+                            {'label': 'Europe', 'value': 'Europe'},
+                            {'label': 'Africa', 'value': 'Africa'},
+                            {'label': 'Americas', 'value': 'Americas'},
+                            {'label': 'Oceania', 'value': 'Oceania'}
+                        ],
+                        value='World',
+                        style=dict(width='30%',
+                                verticalAlign="middle")
+                                )),
+                    dbc.Col(
                         html.Iframe(
                             sandbox='allow-scripts',
                             id='plot',
@@ -168,10 +186,11 @@ app.layout = html.Div([header,
                        content])
 @app.callback(
     dash.dependencies.Output('plot', 'srcDoc'),
-    [dash.dependencies.Input('dd-chart', 'value')])
-def update_plot(alcohol_type):
+    [dash.dependencies.Input('dd-chart', 'value'),
+    dash.dependencies.Input('dd-chart2', 'value')])
+def update_plot(alcohol_type, region):
     #Takes in an alcohol_type and calls create_map to update our Altair figure
-    updated_plot = create_map(alcohol_type).to_html()
+    updated_plot = create_map(alcohol_type, region).to_html()
     return updated_plot
 if __name__ == '__main__':
     app.run_server(debug=True)# Create your app here
