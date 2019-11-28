@@ -15,12 +15,12 @@ df = pd.read_csv("data/merged_data_clean.csv")
 def create_map(alcohol_type = 'beer', region = "World"):
     """
     Create choropleth heatmap based on alcoholic consumption
-    
+
     Parameters
     ----------
     alcohol_type : str {‘wine’, ‘beer’, 'spirit'}
         Type of alcohol to show on choropleth.
-    
+
     Returns
     -------
     altair Chart object
@@ -32,7 +32,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
 
     region_dict = {"World":[140, 450, 400], "Asia":[400, -190, 520], "Europe":[800,300, 1100],
      "Africa":[400,300, 310], "Americas":[275,950, 310], "Oceania":[500, -800, 50]}
-        
+
     # set colour scheme of map
     if alcohol_type == 'wine':
         map_color = ['#f9f9f9', '#720b18']
@@ -40,10 +40,10 @@ def create_map(alcohol_type = 'beer', region = "World"):
         map_color = ['#f9f9f9', '#DAA520']
     else:
         map_color = ['#f9f9f9', '#67b2e5', '#1f78b5']
-    
+
     cols = [x for x in df.columns if alcohol_type in x]
     cols.append('country')
-    
+
     # Create map plot
     map_plot = alt.Chart(alt.topo_feature(data.world_110m.url, 'countries')).mark_geoshape(
         stroke='white',
@@ -96,7 +96,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
             {"field": cols[2], "type": "quantitative", 'title': 'Global rank'},
         ]
     ).transform_window(
-        sort=[alt.SortField(cols[1], order="descending")], 
+        sort=[alt.SortField(cols[1], order="descending")],
         rank="rank(cols[1])"
     ).transform_filter(
         alt.datum.rank <= 20
@@ -165,6 +165,11 @@ content = dbc.Container([
                         style=dict(width='30%',
                                 verticalAlign="middle")
                                 )),
+
+                    dcc.Markdown('''
+                    **Source:** FiveThirtyEight ([link](https://github.com/fivethirtyeight/data/tree/master/alcohol-consumption))
+                    '''),
+
                     dbc.Col(
                         html.Iframe(
                             sandbox='allow-scripts',
@@ -175,8 +180,8 @@ content = dbc.Container([
                             # need to change the category here under the create_map function
                             srcDoc= create_map().to_html()
                             )),
-                    
-                
+
+
                 ]
     )
 ]
