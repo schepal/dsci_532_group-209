@@ -36,16 +36,21 @@ df_location = df_location.replace({'name':
                                    }}).rename(columns={'name': 'country'})
 
 # merge datasets together
-df = df.merge(df_location[['country', 'country-code']], how='left')
+df = df.merge(df_location[['country', 'country-code', 'region']], how='left')
 
 # add new columns for plotting
 df['total_servings'] = df.iloc[:, 1:4].sum(axis=1)
 df['prop_wine'] = df['wine_servings'] / df['total_servings']
 df['prop_beer'] = df['beer_servings'] / df['total_servings']
 df['prop_spirits'] = df['spirit_servings'] / df['total_servings']
+# Global Rank of Drink
 df['rank_wine'] = df['prop_wine'].rank(ascending = False)
 df['rank_beer'] = df['prop_beer'].rank(ascending = False)
 df['rank_spirit'] = df['prop_spirits'].rank(ascending = False)
+# Relative ranks of drink based on region
+df['relative_rank_wine'] = df.groupby('region')['prop_wine'].rank(ascending = False)
+df['relative_rank_beer'] = df.groupby('region')['prop_beer'].rank(ascending = False)
+df['relative_rank_spirit'] = df.groupby('region')['prop_spirits'].rank(ascending = False)
 
 # rename 'country-code' to 'id'
 df = df.rename(columns={'country-code':'id'})
