@@ -44,6 +44,12 @@ def create_map(alcohol_type = 'beer', region = "World"):
     cols = [x for x in df.columns if alcohol_type in x]
     cols.append('country')
 
+    # this is to select the rank column to sort
+    if region == 'World':
+        col_to_filter = cols[2]
+    else:
+        col_to_filter = cols[3]
+
     # Create map plot
     map_plot = alt.Chart(alt.topo_feature(data.world_110m.url, 'countries')).mark_geoshape(
         stroke='white',
@@ -56,7 +62,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
                                    title = f'Proportion of total servings per person from {alcohol_type}')
                  ),
         tooltip = [
-            {"field": cols[3], "type": "nominal", 'title': "Country"},
+            {"field": cols[4], "type": "nominal", 'title': "Country"},
             {"field": cols[1], "type": "quantitative", 'title': f'Proportion of total servings from {alcohol_type}', 'format':'.2f'},
             {"field": cols[0], "type": "quantitative", 'title': f'Total {alcohol_type} servings'},
             {"field": cols[2], "type": "quantitative", 'title': 'Global rank'},
@@ -90,14 +96,14 @@ def create_map(alcohol_type = 'beer', region = "World"):
             scale=alt.Scale(domain=[0, 1], range=map_color),
             legend=None),
         tooltip = [
-            {"field": cols[3], "type": "nominal", 'title': "Country"},
+            {"field": cols[4], "type": "nominal", 'title': "Country"},
             {"field": cols[1], "type": "quantitative", 'title': f'Proportion of total servings per person from {alcohol_type}', 'format':'.2f'},
             {"field": cols[0], "type": "quantitative", 'title': f'Total {alcohol_type} servings'},
             {"field": cols[2], "type": "quantitative", 'title': 'Global rank'},
         ]
     ).transform_window(
         sort=[alt.SortField(cols[1], order="descending")],
-        rank="rank(cols[1])"
+        rank="rank(col_to_filter)"
     ).transform_filter(
         alt.datum.rank <= 20
     ).properties(
@@ -126,7 +132,7 @@ header = dbc.Jumbotron(
                 html.H1("Which Countries are Beer-lovers, Wine-lovers, or Spirit-lovers?", className="display-3",
                         style={'color': 'red'}),
                 html.P(
-                    "Proportion of alcoholic drink type consumed by each country",
+                    "Proportion of alcoholic drink type consumed by each country in 2010",
                     className="lead",
                 ),
             ],
