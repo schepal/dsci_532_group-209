@@ -131,11 +131,22 @@ header = dbc.Jumbotron(
             [
 
                 html.H1("Which Countries are Beer-lovers, Wine-lovers, or Spirit-lovers?", className="display-3",
-                        style={'color': 'red'}),
-                html.P(
-                    "Proportion of alcoholic drink type consumed by each country in 2010",
-                    className="lead",
-                ),
+                        style={'color': 'blue', 'font-family':'Book Antiqua'}),
+                html.H1(
+                    "The following dashboard provides a visual overview on the proportion of \
+                    global alcohol consumption across beer, wine and spirits in 2010. \
+                    Users can simultaneously adjust the geographic location and specific \
+                    alcohol type of their choice. The horizontal bar chart on the right of the \
+                    map dynamically updates as different geographies and alcohol types are selected.",
+                    className="lead", style={'color': 'black', 'font-weight':'lighter',
+                                            'font-family':'Book Antiqua', 'font-size':20}),
+
+                html.A('Data Source: ',style={'color': 'black', 'font-family':'Book Antiqua'}),
+                html.A("FiveThirtyEight", href='https://github.com/fivethirtyeight/data/tree/master/alcohol-consumption'),
+                html.H1("______", style={'color': 'white', 'font-size':10}),
+
+                html.H1('Adjust the cells below:' ,
+                style={'color': 'black', 'font-size': 20,'font-family':'Book Antiqua'}),
             ],
             fluid=True,
         )
@@ -172,11 +183,6 @@ content = dbc.Container([
                         style=dict(width='30%',
                                 verticalAlign="middle")
                                 )),
-
-                    dcc.Markdown('''
-                    **Source:** FiveThirtyEight ([link](https://github.com/fivethirtyeight/data/tree/master/alcohol-consumption))
-                    '''),
-
                     dbc.Col(
                         html.Iframe(
                             sandbox='allow-scripts',
