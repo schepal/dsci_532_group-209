@@ -30,8 +30,8 @@ def create_map(alcohol_type = 'beer', region = "World"):
     >>> create_map('spirit')
     """
 
-    region_dict = {"World":[140, 450, 400], "Asia":[400, -190, 520], "Europe":[800,300, 1100],
-     "Africa":[400,300, 310], "Americas":[275,950, 310], "Oceania":[500, -800, 50]}
+    region_dict = {"World":[140, 450, 400, 'the World'], "Asia":[400, -190, 520, 'Asia'], "Europe":[800,300, 1100, 'Europe'],
+     "Africa":[400,300, 310, 'Africa'], "Americas":[275,950, 310, 'the Americas'], "Oceania":[500, -800, 50, 'Oceania']}
 
     # set colour scheme of map
     if alcohol_type == 'wine':
@@ -65,6 +65,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
             {"field": cols[4], "type": "nominal", 'title': "Country"},
             {"field": cols[1], "type": "quantitative", 'title': f'Proportion of total servings from {alcohol_type}', 'format':'.2f'},
             {"field": cols[0], "type": "quantitative", 'title': f'Total {alcohol_type} servings'},
+            {"field": cols[3], "type": "quantitative", 'title': 'Continent rank'},
             {"field": cols[2], "type": "quantitative", 'title': 'Global rank'},
         ]
     ).transform_lookup(
@@ -99,6 +100,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
             {"field": cols[4], "type": "nominal", 'title': "Country"},
             {"field": cols[1], "type": "quantitative", 'title': f'Proportion of total servings per person from {alcohol_type}', 'format':'.2f'},
             {"field": cols[0], "type": "quantitative", 'title': f'Total {alcohol_type} servings'},
+            {"field": cols[3], "type": "quantitative", 'title': 'Continent rank'},
             {"field": cols[2], "type": "quantitative", 'title': 'Global rank'},
         ]
     ).transform_filter(alt.datum.region == region if region != 'World' else alt.datum.total_servings >= 0
@@ -108,7 +110,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
     ).transform_filter(
         alt.datum.rank <= 20
     ).properties(
-        title=f"Top 20 countries that love {alcohol_type}",
+        title=f"Top 20 Countries that love {alcohol_type.title()} in {region_dict[region][3]}",
         width = 200,
         height = 600
     )
@@ -130,6 +132,7 @@ header = dbc.Jumbotron(
         dbc.Container(
             [
 
+
                 html.H1("Which Countries are Beer-lovers, Wine-lovers, or Spirit-lovers?", className="display-3",
                         style={'color': 'blue', 'font-family':'Book Antiqua'}),
                 html.H1(
@@ -147,6 +150,7 @@ header = dbc.Jumbotron(
 
                 html.H1('Adjust the cells below:' ,
                 style={'color': 'black', 'font-size': 20,'font-family':'Book Antiqua'}),
+
             ],
             fluid=True,
         )
