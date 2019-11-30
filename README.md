@@ -10,5 +10,4 @@ The app’s landing page will include a heatmap representing the map of the worl
 
 
 ## Functionality
-Users are able to interactively engage with the dashboard by adjusting the cells of the alchohol type and respective geographic location of interest. 
-
+Users are able to interactively engage with the dashboard by adjusting the cells of the alcohol type and respective geographic location of interest.
