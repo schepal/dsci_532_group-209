@@ -31,7 +31,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
     """
 
     region_dict = {"World":[140, 450, 400, 'the World'], "Asia":[400, -190, 520, 'Asia'], "Europe":[800,300, 1100, 'Europe'],
-     "Africa":[400,300, 310, 'Africa'], "Americas":[275,950, 310, 'the Americas'], "Oceania":[500, -800, 50, 'Oceania']}
+     "Africa":[400,300, 310, 'Africa'], "Americas":[200,900, 360, 'the Americas'], "Oceania":[500, -800, 50, 'Oceania']}
 
     # set colour scheme of map
     if alcohol_type == 'wine':
@@ -144,6 +144,16 @@ header = dbc.Jumbotron(
                     className="lead", style={'color': 'black', 'font-weight':'lighter',
                                             'font-family':'Book Antiqua', 'font-size':20}),
 
+                html.H1("______", style={'color': 'white', 'font-size':10}),
+                html.H1(
+                "Note: Proportions are calculated as a ratio of total servings for a specific type of drink \
+                divided by the total servings of all drinks in the country. As a result, countries with low total servings \
+                of alchohol may have unusually high ratios as shown in the case of Saudi Arabia.",
+                className="lead", style={'color': 'black', 'font-weight':'lighter',
+                                        'font-family':'Book Antiqua', 'font-size':20}),
+
+
+#                html.H1("______", style={'color': 'white', 'font-size':10}),
                 html.A('Data Source: ',style={'color': 'black', 'font-family':'Book Antiqua'}),
                 html.A("FiveThirtyEight", href='https://github.com/fivethirtyeight/data/tree/master/alcohol-consumption'),
                 html.H1("______", style={'color': 'white', 'font-size':10}),
