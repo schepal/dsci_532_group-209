@@ -12,28 +12,37 @@ import dash_bootstrap_components as dbc
 app = dash.Dash(__name__, assets_folder='assets')
 server = app.server
 df = pd.read_csv("data/merged_data_clean.csv")
+
 def create_map(alcohol_type = 'beer', region = "World"):
     """
-    Create choropleth heatmap based on alcoholic consumption
+    Create choropleth heatmap based on alcoholic consumption and region.
+    Cloropleth colour scheme will change depending on alcohol type selected.
+    The zoom of map will adjust depending on region selected.
 
     Parameters
     ----------
     alcohol_type : str {‘wine’, ‘beer’, 'spirit'}
         Type of alcohol to show on choropleth.
 
+    region: str {'World', 'Asia', 'Europe', 'Africa', 'Americas', 'Oceania'}
     Returns
     -------
     altair Chart object
         Choropleth of chosen alcohol type
     Examples
     --------
-    >>> create_map('spirit')
+    >>> create_map('spirit', 'Europe')
     """
 
-    region_dict = {"World":[140, 450, 400, 'the World'], "Asia":[400, -190, 520, 'Asia'], "Europe":[800,300, 1100, 'Europe'],
-     "Africa":[400,300, 310, 'Africa'], "Americas":[200,900, 360, 'the Americas'], "Oceania":[500, -800, 50, 'Oceania']}
+    # dictionary to store zoom scales and text for bar chart title
+    region_dict = {"World":[140, 450, 400, 'the World'], 
+                   "Asia":[400, -190, 520, 'Asia'], 
+                   "Europe":[800, 300, 1100, 'Europe'],
+                   "Africa":[400, 300, 310, 'Africa'], 
+                   "Americas":[200, 900, 360, 'the Americas'], 
+                   "Oceania":[500, -800, 50, 'Oceania']}
 
-    # set colour scheme of map
+    # set colour scheme of map depending on alcohol type
     if alcohol_type == 'wine':
         map_color = ['#f9f9f9', '#720b18']
     elif alcohol_type == 'beer':
@@ -41,6 +50,7 @@ def create_map(alcohol_type = 'beer', region = "World"):
     else:
         map_color = ['#f9f9f9', '#67b2e5', '#1f78b5']
 
+    # get columns for specific to the alcohol type selected
     cols = [x for x in df.columns if alcohol_type in x]
     cols.append('country')
 
@@ -55,14 +65,14 @@ def create_map(alcohol_type = 'beer', region = "World"):
         stroke='white',
         strokeWidth=0.5
     ).encode(
-        alt.Color(field = cols[1],
+        alt.Color(field = cols[1], #proportion of alcohol type
                   type = 'quantitative',
                   scale=alt.Scale(domain=[0, 1], range=map_color),
                   legend=alt.Legend(orient='top',
                                    title = f'Proportion of total servings per person from {alcohol_type}')
                  ),
         tooltip = [
-            {"field": cols[4], "type": "nominal", 'title': "Country"},
+            {"field": cols[4], "type": "nominal", 'title': "Country"}, 
             {"field": cols[1], "type": "quantitative", 'title': f'Proportion of total servings from {alcohol_type}', 'format':'.2f'},
             {"field": cols[0], "type": "quantitative", 'title': f'Total {alcohol_type} servings'},
             {"field": cols[3], "type": "quantitative", 'title': 'Continent rank'},
@@ -80,9 +90,9 @@ def create_map(alcohol_type = 'beer', region = "World"):
 
     bar = alt.Chart(df).mark_bar().encode(
         alt.X(
-            field=cols[1],
+            field=cols[1], #proportion of alcohol type
             type='quantitative',
-            title = "",
+            title = "Proportion Consumed",
             scale=alt.Scale(domain=[0, 1]),
         ),
         alt.Y(
@@ -111,10 +121,10 @@ def create_map(alcohol_type = 'beer', region = "World"):
         alt.datum.rank <= 20
     ).properties(
         title=f"Top 20 Countries that love {alcohol_type.title()} in {region_dict[region][3]}",
-        width = 200,
+        width = 400,
         height = 600
     )
-
+    # concatenate map and bar chart plots
     return alt.hconcat(map_plot, bar).configure_legend(
         gradientLength=300,
         gradientThickness=20,
@@ -131,8 +141,6 @@ header = dbc.Jumbotron(
     [
         dbc.Container(
             [
-
-
                 html.H1("Which Countries are Beer-lovers, Wine-lovers, or Spirit-lovers?", className="display-3",
                         style={'color': 'blue', 'font-family':'Book Antiqua'}),
                 html.H1(
@@ -171,6 +179,7 @@ header = dbc.Jumbotron(
 content = dbc.Container([
     dbc.Row(
                 [dbc.Col(
+                    # Drink type dropdown
                     dcc.Dropdown(
                         id='dd-chart',
                         options=[
@@ -183,6 +192,7 @@ content = dbc.Container([
                                 verticalAlign="middle")
                                 )),
                     dbc.Col(
+                    # Region dropdown
                     dcc.Dropdown(
                         id='dd-chart2',
                         options=[
@@ -216,12 +226,30 @@ content = dbc.Container([
 
 app.layout = html.Div([header,
                        content])
+# call back to update visualizations based on dropdown selections                       
 @app.callback(
     dash.dependencies.Output('plot', 'srcDoc'),
     [dash.dependencies.Input('dd-chart', 'value'),
     dash.dependencies.Input('dd-chart2', 'value')])
 def update_plot(alcohol_type, region):
-    #Takes in an alcohol_type and calls create_map to update our Altair figure
+    """
+    #Function takes in an alcohol_type and region and calls create_map to update Altair figure
+
+    Parameters
+    ----------
+    alcohol_type : str {‘wine’, ‘beer’, 'spirit'}
+        Type of alcohol to show on choropleth.
+
+    region: str {'World', 'Asia', 'Europe', 'Africa', 'Americas', 'Oceania'}
+    Returns
+    -------
+    altair Chart object
+        Choropleth of chosen alcohol type
+    Examples
+    --------
+    >>> update_plot('spirit', 'Europe')
+    """
+    
     updated_plot = create_map(alcohol_type, region).to_html()
     return updated_plot
 if __name__ == '__main__':
